@@ -26,6 +26,11 @@ object Main {
   def init(system: ActorSystem[_]): Unit = {
     AkkaManagement(system).start()
     ClusterBootstrap(system).start()
+
+    val grpcInterface = system.settings.config.getString("shopping-order-service.grpc.interface")
+    val grpcPort = system.settings.config.getInt("shopping-order-service.grpc.port")
+    val grpcService = new ShoppingOrderServiceImpl
+    ShoppingOrderServer.start(grpcInterface, grpcPort, system, grpcService)
   }
 
 }
